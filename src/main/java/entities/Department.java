@@ -72,6 +72,14 @@ public class Department extends BaseEntity{
         return Objects.hash(getID(), getDepartmentName(), getCountPerson());
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Department{" +
+                "ID=" + ID +
+                ", departmentName='" + departmentName + '\'' +
+                ", countPerson=" + countPerson +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
 }

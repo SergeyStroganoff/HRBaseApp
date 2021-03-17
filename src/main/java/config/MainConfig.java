@@ -21,7 +21,6 @@ public class MainConfig {
 
 
     public static String getProperty(String property) {
-
         return MAIN_PROP.getProperty(property);
     }
 }

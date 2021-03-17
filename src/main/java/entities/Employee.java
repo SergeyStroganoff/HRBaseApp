@@ -94,4 +94,18 @@ public class Employee extends BaseEntity{
     public int hashCode() {
         return Objects.hash(super.hashCode(), getSurname(), getFirstName(), getSecondName(), getBirthDate(), getPosition(), getDepartment(), getAccessSecret());
     }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "ID=" + ID +
+                ", Surname='" + Surname + '\'' +
+                ", FirstName='" + FirstName + '\'' +
+                ", SecondName='" + SecondName + '\'' +
+                ", BirthDate=" + BirthDate +
+                ", position=" + position +
+                ", department=" + department +
+                ", accessSecret=" + accessSecret +
+                '}';
+    }
 }
