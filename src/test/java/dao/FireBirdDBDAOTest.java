@@ -32,7 +32,6 @@ public class FireBirdDBDAOTest {
         fireBirdDBDAO = new FireBirdDBDAO();
     }
 
-
     @Test
     public void testFindEntity() {
 
@@ -44,8 +43,7 @@ public class FireBirdDBDAOTest {
             e.printStackTrace();
         }
         Assert.assertNotNull(employeesList);
-        Assert.assertEquals("Родионов",employeesList.get(0).getSurname());
-
+        Assert.assertEquals("Родионов", employeesList.get(0).getSurname());
     }
 
     @Test
@@ -59,28 +57,26 @@ public class FireBirdDBDAOTest {
             e.printStackTrace();
         }
         Assert.assertNotEquals(0, result);
-
     }
 
     @Test
     public void updateEntity() {
 
         List<Employee> employeesList = null;
-        int returnedID = 0;
+        int ID = 0;
         Employee employee = createRandomEmployee();
 
         try {
-            returnedID = fireBirdDBDAO.addEntity(employee);
-
-            logger.debug(returnedID);
+            ID = fireBirdDBDAO.addEntity(employee);
+            logger.debug(ID);
             employee.setSurname("TestFamily");
+            employee.setID(ID);
             fireBirdDBDAO.updateEntity(employee);
 
             ParamRequest paramRequest = new ParamRequest("TestFamily");
-            logger.debug(employee.getID());
             employeesList = fireBirdDBDAO.findEntity(paramRequest);
 
-         //   fireBirdDBDAO.deleteEntity(employee.getID());
+            fireBirdDBDAO.deleteEntity(employee.getID());
 
         } catch (DaoException e) {
             e.printStackTrace();
@@ -88,7 +84,6 @@ public class FireBirdDBDAOTest {
 
         assert employeesList != null;
         Assert.assertEquals("TestFamily", employeesList.get(0).getSurname());
-
     }
 
     @Test
@@ -116,14 +111,12 @@ public class FireBirdDBDAOTest {
         Random random = new Random();
         Position position = new Position(5, "Специалист", 45000f);
         Department department = new Department(4, "Отдел разработки и проектирования", 3, "mail@mail.ru", "556678");
-        return new Employee(0, "Сергеев", "Даниил", "Аркадьевич", LocalDate.of(getRandomNumber(1920,2005), getRandomNumber(1,13), getRandomNumber(1,28)), position, department, true);
+        return new Employee(0, "Сергеев", "Даниил", "Аркадьевич", LocalDate.of(getRandomNumber(1920, 2005), getRandomNumber(1, 13), getRandomNumber(1, 28)), position, department, true);
     }
 
     private int getRandomNumber(int min, int max) {
         Random random = new Random();
         return random.nextInt(max - min) + min;
     }
-
-
 
 }

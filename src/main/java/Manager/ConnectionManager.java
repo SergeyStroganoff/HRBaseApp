@@ -48,7 +48,7 @@ public class ConnectionManager {
     }
 
     // Получение одного
-    public BaseEntity getEntity(Long Id) throws ContactBusinessException {
+    public BaseEntity getEntity(int Id) throws ContactBusinessException {
         try {
             return dao.getEntity(Id);
         } catch (DaoException ex) {

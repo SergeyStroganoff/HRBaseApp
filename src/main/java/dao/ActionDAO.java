@@ -22,7 +22,7 @@ public interface ActionDAO {
     public void deleteEntity(int employeeId) throws DaoException;
 
     // Получение контакта
-    public Employee getEntity(Long employeeId) throws DaoException;
+    public Employee getEntity(int employeeId) throws DaoException;
 
     // Получение списка контактов
     public List<Employee> findEntity(ParamRequest paramRequest) throws DaoException;

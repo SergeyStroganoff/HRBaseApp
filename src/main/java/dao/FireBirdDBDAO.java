@@ -25,7 +25,7 @@ public class FireBirdDBDAO implements ActionDAO {
             Class.forName(MainConfig.getProperty("FIREBIRD.driver")).getDeclaredConstructor().newInstance();
 
         } catch (InstantiationException e) {
-            logger.error("Error инициализации driver" + e.toString());
+            logger.error("Error instantiation driver" + e.toString());
         } catch (InvocationTargetException e) {
             logger.error("Error invocation driver" + e.toString());
         } catch (NoSuchMethodException e) {
@@ -34,7 +34,6 @@ public class FireBirdDBDAO implements ActionDAO {
             logger.error(e.toString());
         } catch (ClassNotFoundException e) {
             logger.error(e.toString());
-
         }
 
         try {
@@ -62,13 +61,12 @@ public class FireBirdDBDAO implements ActionDAO {
     @Override
     public int addEntity(Employee employee) throws DaoException {
         int result = 0;
-        PreparedStatement stmt = null;
-        System.out.println("Начинаем добавление");
 
-        try {
-            stmt = connection.prepareStatement(
-                    "INSERT into employee (surname, fname, sname, birthdate, position_id, departament_id, access_secrets)" +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?)");
+        final String INSERT = "INSERT into employee (surname, fname, sname, birthdate, position_id, departament_id, access_secrets)" +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(INSERT, new String[]{"ID"})) {
+
 
             stmt.setString(1, employee.getSurname());
             stmt.setString(2, employee.getFirstName());
@@ -81,17 +79,12 @@ public class FireBirdDBDAO implements ActionDAO {
             result = stmt.executeUpdate();
 
             ResultSet gk = stmt.getGeneratedKeys();
-            System.out.println(gk.next());// .getInt("ID"));
             if (gk.next()) {
-                result =  gk.getInt("ID");
-                logger.debug("Вставка значения успешна, получили ключ" + result);
-                System.out.println("Вставка значения успешна, получили ключ" + result);
+                result = gk.getInt("ID");
             }
-           // gk.close();
-           // stmt.close();
+            gk.close();
 
         } catch (SQLException e) {
-
             logger.error("Ошибка добавления записи в базу данных");
             throw new DaoException("Ошибка добавления записи в базу данных", e);
 
@@ -102,7 +95,7 @@ public class FireBirdDBDAO implements ActionDAO {
     @Override
     public void updateEntity(Employee employee) throws DaoException {
 
-        final  String UPDATE = "UPDATE employee SET surname=?, fname=?, sname=?, birthdate=?, position_id=?, departament_id=?, access_secrets=? WHERE id=?";
+        final String UPDATE = "UPDATE employee SET surname=?, fname=?, sname=?, birthdate=?, position_id=?, departament_id=?, access_secrets=? WHERE id=?";
 
         try (PreparedStatement stmt = connection.prepareStatement(UPDATE)) {
 
@@ -122,7 +115,6 @@ public class FireBirdDBDAO implements ActionDAO {
 
             logger.error("Ошибка добавления записи в базу данных");
             throw new DaoException(e);
-
         }
     }
 
@@ -137,12 +129,13 @@ public class FireBirdDBDAO implements ActionDAO {
             logger.error("Ошибка SQL запроса при удалении записи " + e.toString());
             throw new DaoException(e.toString());
         }
-
     }
 
     @Override
-    public Employee getEntity(Long employeeId) throws DaoException {
-        return null;
+    public Employee getEntity(int employeeId) throws DaoException {
+        ParamRequest paramRequest = new ParamRequest(employeeId);
+        List<Employee> employeeList = findEntity(paramRequest);
+        return employeeList.get(0);
     }
 
     @Override
@@ -203,12 +196,11 @@ public class FireBirdDBDAO implements ActionDAO {
         if (parameters.getSurname() != null) {
             whereSQL = String.format("WHERE e.surname like '%%%s%%' order by e.surname;", parameters.getSurname());
         }
-        ResultSet resultSet = null;
-        resultSet = statement.executeQuery
+
+        return statement.executeQuery
                 ("SELECT * from employee e " +
                         "join departments d on e.departament_id = d.id " +
                         "join departnames n on d.departnameid = n.id " +
                         "join positions p on e.position_id = p.id " + whereSQL);
-        return resultSet;
     }
 }

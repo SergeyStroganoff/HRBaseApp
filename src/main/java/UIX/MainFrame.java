@@ -3,6 +3,8 @@ package UIX;
 import javax.swing.*;
 import java.awt.*;
 
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+
 public class MainFrame {
 
     public void initFrame() {
@@ -10,7 +12,7 @@ public class MainFrame {
         JFrame frame = new JFrame("База данных сотрудников предприятия");
         frame.setSize(800, 600);
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setLayout(new GridBagLayout());
