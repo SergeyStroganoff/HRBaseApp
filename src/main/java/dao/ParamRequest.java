@@ -2,10 +2,10 @@ package dao;
 
 public class ParamRequest {
 
-   private Integer ID;
-   private String Surname;
-   private String FirstName;
-   private String SecondName;
+    private Integer ID;
+    private String Surname;
+    private String FirstName;
+    private String SecondName;
 
     public ParamRequest(int ID) {
         this.ID = ID;
@@ -15,7 +15,7 @@ public class ParamRequest {
         Surname = surname;
     }
 
-    public   ParamRequest(String surname, String firstName) {
+    public ParamRequest(String surname, String firstName) {
         Surname = surname;
         FirstName = firstName;
     }

@@ -2,8 +2,10 @@ package dao;
 
 
 import entities.BaseEntity;
+import entities.Employee;
 import exception.DaoException;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -11,18 +13,18 @@ import java.util.List;
  */
 public interface ActionDAO {
     // Добавление контакта - возвращает ID добавленного контакта
-    public Long addEntity(BaseEntity entity) throws DaoException;
+    public int addEntity(Employee employee) throws DaoException, SQLException;
 
     // Редактирование контакта
-    public void updateEntity(BaseEntity entity) throws DaoException;
+    public void updateEntity(Employee employee) throws DaoException;
 
     // Удаление контакта по его ID
-    public void deleteEntity(Long entityId) throws DaoException;
+    public void deleteEntity(int employeeId) throws DaoException;
 
     // Получение контакта
-    public BaseEntity getEntity(Long entityId) throws DaoException;
+    public Employee getEntity(Long employeeId) throws DaoException;
 
     // Получение списка контактов
-    public List<BaseEntity> findEntity(String surname) throws DaoException;
+    public List<Employee> findEntity(ParamRequest paramRequest) throws DaoException;
 
 }

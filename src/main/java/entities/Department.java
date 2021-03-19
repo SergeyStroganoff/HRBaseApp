@@ -2,7 +2,7 @@ package entities;
 
 import java.util.Objects;
 
-public class Department extends BaseEntity{
+public class Department extends BaseEntity {
 
 
     private String departmentName;

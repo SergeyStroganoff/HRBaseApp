@@ -1,7 +1,6 @@
 package exception;
 
-public class ContactBusinessException extends Exception
-{
+public class ContactBusinessException extends Exception {
     public ContactBusinessException() {
     }
 

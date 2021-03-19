@@ -3,7 +3,7 @@ package entities;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Employee extends BaseEntity{
+public class Employee extends BaseEntity {
 
     String Surname;
     String FirstName;

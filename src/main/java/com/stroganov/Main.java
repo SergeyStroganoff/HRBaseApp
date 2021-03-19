@@ -1,12 +1,13 @@
 package com.stroganov;
 
-import Manager.EntityManager;
+import Manager.ConnectionManager;
 import config.MainConfig;
+import dao.ParamRequest;
+import entities.Employee;
 import exception.ContactBusinessException;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
+import java.util.List;
 
 public class Main {
 
@@ -14,20 +15,22 @@ public class Main {
 	// write your code here
 
 
-
         try {
             MainConfig.initConfig();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        EntityManager entityManager = new EntityManager();
+        ConnectionManager connectionManager = new ConnectionManager();
+        ParamRequest paramRequest = new ParamRequest(2);
+
         try {
-            System.out.println( entityManager.findEntity("Род"));
+            List<Employee> employeeList =  connectionManager.findEntity(paramRequest);
+            employeeList.get(0).setSurname("main");
+            connectionManager.addEntity(employeeList.get(0));
+            connectionManager.deleteEntity(16);
         } catch (ContactBusinessException e) {
             e.printStackTrace();
-
         }
-
 
     }
 }

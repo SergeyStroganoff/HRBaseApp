@@ -3,40 +3,43 @@ package Manager;
 import dao.ActionDAO;
 import dao.BaseType;
 import dao.DAOFactory;
+import dao.ParamRequest;
 import entities.BaseEntity;
+import entities.Employee;
 import exception.ContactBusinessException;
 import exception.DaoException;
 
+import java.sql.SQLException;
 import java.util.List;
 
-public class EntityManager {
+public class ConnectionManager {
 
     private ActionDAO dao;
 
-    public EntityManager() {
+    public ConnectionManager() {
         dao = DAOFactory.getBaseDAO(BaseType.FIREBIRD);
     }
 
     // Добавление контакта - возвращает ID добавленного контакта
-    public Long addEntity(BaseEntity entity) throws ContactBusinessException {
+    public int addEntity(Employee employee) throws ContactBusinessException {
         try {
-            return dao.addEntity(entity);
-        } catch (DaoException ex) {
+            return dao.addEntity(employee);
+        } catch (DaoException | SQLException ex) {
             throw new ContactBusinessException(ex);
         }
     }
 
     // Редактирование
-    public void updateEntity(BaseEntity entity) throws ContactBusinessException {
+    public void updateEntity(Employee employee) throws ContactBusinessException {
         try {
-            dao.updateEntity(entity);
+            dao.updateEntity(employee);
         } catch (DaoException ex) {
             throw new ContactBusinessException(ex);
         }
     }
 
     // Удаление контакта
-    public void deleteEntity(Long Id) throws ContactBusinessException {
+    public void deleteEntity(int Id) throws ContactBusinessException {
         try {
             dao.deleteEntity(Id);
         } catch (DaoException ex) {
@@ -54,9 +57,9 @@ public class EntityManager {
     }
 
     // Получение списка
-    public List<BaseEntity> findEntity(String surname) throws ContactBusinessException {
+    public List<Employee> findEntity(ParamRequest paramRequest) throws ContactBusinessException {
         try {
-            return dao.findEntity(surname);
+            return dao.findEntity(paramRequest);
         } catch (DaoException ex) {
             throw new ContactBusinessException(ex);
         }
