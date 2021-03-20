@@ -3,6 +3,8 @@ package com.stroganov;
 import Manager.ConnectionManager;
 import UIX.ContactFrame;
 import UIX.GuiResource;
+import UIX.MainFrame;
+import UIX.NewJFrame;
 import config.MainConfig;
 import dao.ParamRequest;
 import entities.Employee;
@@ -23,9 +25,17 @@ public class Main {
             e.printStackTrace();
         }
 
+        java.awt.EventQueue.invokeLater(() -> new NewJFrame().setVisible(true));
 
-        ContactFrame cf = new ContactFrame();
-        cf.setVisible(true);
+
+
+
+
+
+
+
+     //   MainFrame mainFrame = new MainFrame();
+     //   mainFrame.initFrame();
     /*
         ConnectionManager connectionManager = new ConnectionManager();
         ParamRequest paramRequest = new ParamRequest(20);

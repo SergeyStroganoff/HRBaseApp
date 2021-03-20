@@ -5,13 +5,13 @@ import java.util.Objects;
 
 public class Employee extends BaseEntity {
 
-    String Surname;
-    String FirstName;
-    String SecondName;
-    LocalDate BirthDate;
-    Position position;
-    Department department;
-    Boolean accessSecret;
+   private String Surname;
+   private String FirstName;
+   private String SecondName;
+   private LocalDate BirthDate;
+   private Position position;
+   private Department department;
+   private Boolean accessSecret;
 
     public Employee(int ID, String surname, String firstName, String secondName, LocalDate birthDate,
                     Position position, Department department, Boolean accessSecret) {

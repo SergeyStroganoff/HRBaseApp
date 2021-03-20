@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Position extends BaseEntity {
 
-    String NamePosition;
-    float salary;
+   private String NamePosition;
+   private float salary;
 
 
     public Position(int ID, String namePosition, float salary) {
