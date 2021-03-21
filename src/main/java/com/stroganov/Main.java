@@ -1,17 +1,9 @@
 package com.stroganov;
 
-import Manager.ConnectionManager;
-import UIX.ContactFrame;
-import UIX.GuiResource;
 import UIX.MainFrame;
-import UIX.NewJFrame;
 import config.MainConfig;
-import dao.ParamRequest;
-import entities.Employee;
-import exception.ContactBusinessException;
 
 import java.io.IOException;
-import java.util.List;
 
 public class Main {
 
@@ -25,9 +17,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        java.awt.EventQueue.invokeLater(() -> new NewJFrame().setVisible(true));
-
-
+        java.awt.EventQueue.invokeLater(() -> new MainFrame().setVisible(true));
 
 
 

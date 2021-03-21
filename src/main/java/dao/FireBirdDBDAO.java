@@ -192,8 +192,7 @@ public class FireBirdDBDAO implements ActionDAO {
         }
         if (parameters.getSurname() != null && parameters.getFirstName() != null) {
             whereSQL = String.format("WHERE e.surname like '%%%s%%' and e.fname like '%%%s%%'   order by e.surname;", parameters.getSurname(), parameters.getFirstName());
-        }
-        if (parameters.getSurname() != null) {
+        } else if (parameters.getSurname() != null) {
             whereSQL = String.format("WHERE e.surname like '%%%s%%' order by e.surname;", parameters.getSurname());
         }
 
