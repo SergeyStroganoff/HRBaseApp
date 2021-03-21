@@ -171,8 +171,6 @@ public class FireBirdDBDAO implements ActionDAO {
                         resultSet.getBoolean(8));
 
                 employeeList.add(employee);
-
-                employee.toString();
             }
 
         } catch (SQLException throwables) {
@@ -182,6 +180,72 @@ public class FireBirdDBDAO implements ActionDAO {
 
         return employeeList;
     }
+
+    @Override
+    public List<Department> getDepartment(Integer ID) throws DaoException {
+
+        ResultSet resultSet = null;
+        List<Department> departmentList = new ArrayList<>();
+        String where = ";";
+        if (ID != null) where = "WHERE id=?";
+
+        final String GET = "SELECT * from departments d" +
+                " join departnames n on d.departnameid = n.id " +
+
+                where;
+
+        try (PreparedStatement stmt = connection.prepareStatement(GET)) {
+            if (ID != null) {
+                stmt.setInt(1, ID);}
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                Department department = new Department(
+                        resultSet.getInt(1),
+                        resultSet.getString(7),
+                        resultSet.getInt(2),
+                        resultSet.getString(4),
+                        resultSet.getString(3));
+                departmentList.add(department);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            logger.error("Ошибка SQL запроса при запросе Департаментов" + e.toString());
+            throw new DaoException(e.toString());
+        }
+
+        return departmentList;
+    }
+
+    @Override
+    public List<Position> getPosition(Integer ID) throws DaoException {
+        ResultSet resultSet = null;
+        List<Position> departmentList = new ArrayList<>();
+        String where = ";";
+        if (ID != null) where = "WHERE id=?";
+
+        final String GET = "SELECT * from positions" + where;
+
+        try (PreparedStatement stmt = connection.prepareStatement(GET)) {
+            if (ID != null) stmt.setInt(1, ID);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+
+                Position position = new Position(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getFloat(3));
+                departmentList.add(position);
+            }
+
+
+        } catch (SQLException e) {
+            logger.error("Ошибка SQL запроса при запросе Департаментов" + e.toString());
+            throw new DaoException(e.toString());
+        }
+
+        return departmentList;
+    }
+
 
     private ResultSet doRequest(ParamRequest parameters) throws SQLException {
 

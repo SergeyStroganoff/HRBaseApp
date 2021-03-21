@@ -5,7 +5,9 @@ import dao.BaseType;
 import dao.DAOFactory;
 import dao.ParamRequest;
 import entities.BaseEntity;
+import entities.Department;
 import entities.Employee;
+import entities.Position;
 import exception.ContactBusinessException;
 import exception.DaoException;
 
@@ -60,6 +62,23 @@ public class ConnectionManager {
     public List<Employee> findEntity(ParamRequest paramRequest) throws ContactBusinessException {
         try {
             return dao.findEntity(paramRequest);
+        } catch (DaoException ex) {
+            throw new ContactBusinessException(ex);
+        }
+    }
+
+    // Получение департаментов
+    public List<Department> getDepartmentList(Integer ID) throws ContactBusinessException {
+        try {
+            return dao.getDepartment(ID);
+        } catch (DaoException ex) {
+            throw new ContactBusinessException(ex);
+        }
+    }
+
+    public List<Position> getPositionList(Integer ID) throws ContactBusinessException {
+        try {
+            return dao.getPosition(ID);
         } catch (DaoException ex) {
             throw new ContactBusinessException(ex);
         }

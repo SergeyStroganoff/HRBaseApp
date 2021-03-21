@@ -1,10 +1,18 @@
 package UIX;
 
 
+import Manager.ConnectionManager;
+import entities.Department;
 import entities.Employee;
+import entities.Position;
+import exception.ContactBusinessException;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * @author Server
@@ -37,23 +45,27 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
 
     private static final String SAVE = "SAVE";
     private static final String CANCEL = "CANCEL";
+    ConnectionManager connectionManager;
 
 
-    public AddUpdateDialogFrame() {
-        this(null);
+    public AddUpdateDialogFrame(ConnectionManager connectionManager) {
+        this(null, connectionManager);
     }
 
-    public AddUpdateDialogFrame(Employee employee) {
+    public AddUpdateDialogFrame(Employee employee, ConnectionManager connectionManager) {
 
         initComponents();
         // Если нам передали контакт - заполняем поля формы
-        //  initFields(employee);
+        initComboBoxes(connectionManager);
+        initFields(employee);
         setModal(true);
         // Запрещаем изменение размеров
         setResizable(false);
-        // Выставляем размеры формы
-        // setBounds(300, 300, 450, 200);
+        setLocationRelativeTo(null);
+
+
         setVisible(true);
+
     }
 
 
@@ -83,46 +95,25 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Табельный номер");
-
         jLabel2.setText("Фамилия");
-
         jLabel3.setText("Имя");
-
         jLabel4.setText("Отчество");
-
         jLabel5.setText("Дата рождения");
-
-        jTextField1.setText("jTextField1");
-
-
-        jTextField2.setText("jTextField2");
-
-        jTextField3.setText("jTextField3");
-
-        jTextField4.setText("jTextField4");
-
-        jTextField5.setText("jTextField5");
-
-        jTextField6.setText("jTextField6");
-
         jLabel6.setText("Доступ к коммерческой тайне");
-
         jLabel7.setText("Должность");
-
         jLabel8.setText("Департамент (отдел)");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        // jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        //  jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         jButton1.setText("Сохранить");
         jButton1.setActionCommand(SAVE);
         jButton1.addActionListener(this);
 
         jButton2.setText("Отменить");
-        jButton1.setActionCommand(CANCEL);
-        jButton1.addActionListener(this);
-
+        jButton2.setActionCommand(CANCEL);
+        jButton2.addActionListener(this);
 
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -206,6 +197,29 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
     }// </editor-fold>
 
 
+    protected void initComboBoxes(ConnectionManager connectionManager) {
+
+        List<Department> departmentList = null;
+        List<Position> positionList = null;
+        try {
+            departmentList = connectionManager.getDepartmentList(null);
+            positionList = connectionManager.getPositionList(null);
+
+        } catch (ContactBusinessException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Ошибка при запросе списка департаментов и должностей" + e.getMessage());
+
+        }
+
+
+        for (Department nextDepartment : departmentList) {
+            jComboBox2.addItem(nextDepartment.getDepartmentName());
+        }
+        for (Position nextPosition : positionList) {
+            jComboBox1.addItem(nextPosition.getNamePosition());
+        }
+    }
+
     //  заполняем поля из контакта
     private void initFields(Employee employee) {
         if (employee != null) {
@@ -215,12 +229,14 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
             jTextField2.setText(employee.getSurname());
             jTextField3.setText(employee.getFirstName());
             jTextField4.setText(employee.getSecondName());
-            jTextField4.setText(employee.getBirthDate().toString());
+            jTextField5.setText(employee.getBirthDate().toString());
 
-            String access = employee.getAccessSecret()?"Оформлен":"Не оформлен";
+            String access = employee.getAccessSecret() ? "Оформлен" : "Не оформлен";
             jTextField6.setText(access);
+            jComboBox1.setSelectedItem(employee.getPosition().getNamePosition());
+            jComboBox2.setSelectedItem(employee.getDepartment().getDepartmentName());
 
-            jComboBox1.addItem(employee.getPosition().getNamePosition()); //todo
+            //jComboBox1.addItem(employee.getPosition().getNamePosition());
         }
     }
 
@@ -239,58 +255,19 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
         return save;
     }
 
-    // Создаем контакт из заполнных полей, который можно будет записать
+    // Создаем контакт из заполненных полей,
     public Employee getContact() {
         Employee employee = null;
-
-        //= new Contact(contactId, txtFirstName.getText(),
-        //txtLastName.getText(), txtPhone.getText(), txtEmail.getText());
         return employee;
     }
 
+    public static LocalDate GetDateFromString(String stringDate) {
 
-
-
-
-
-
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddUpdateDialogFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddUpdateDialogFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddUpdateDialogFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddUpdateDialogFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                AddUpdateDialogFrame dialog = new AddUpdateDialogFrame(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+        LocalDate date;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        date = LocalDate.parse(stringDate, dtf);
+        return date;
+        //  01/05/16
     }
 
 
