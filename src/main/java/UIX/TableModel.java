@@ -30,7 +30,7 @@ public class TableModel extends AbstractTableModel {
     @Override
     // Получить количество столбцов
     public int getColumnCount() {
-        return 11; //TODO
+        return 11;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class TableModel extends AbstractTableModel {
         Employee employee = employeeList.get(row);
         TableViewEmployee tableViewE =new TableViewEmployee(employee);
 
-        // В зависимости от номера колонки возвращаем то или иное поле контакта
+        // В зависимости от номера колонки возвращаем то или иное поле
         switch (col) {
             case 0:
                 return tableViewE.getID();

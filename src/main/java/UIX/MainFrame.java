@@ -19,6 +19,8 @@ import java.util.List;
 public class MainFrame extends javax.swing.JFrame {
 
 
+    private static final Logger logger = Logger.getLogger(MainFrame.class);
+    private final ConnectionManager connectionManager = new ConnectionManager();
     private javax.swing.JButton findButton;
     private javax.swing.JButton addButton;
     private javax.swing.JButton deleteButton;
@@ -30,14 +32,27 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane ScrollPane;
     private javax.swing.JTable employeeTable;
     private javax.swing.JTextField jTextField1;
-
-    private final ConnectionManager connectionManager = new ConnectionManager();
-    private static final Logger logger = Logger.getLogger(MainFrame.class);
-
     private ParamRequest paramRequest;
 
     public MainFrame() {
         initComponents();
+    }
+
+    protected static ParamRequest prepareParamRequest(String searchText) {
+
+        ParamRequest paramRequest = null;
+
+        if (searchText.matches("^\\d{1,6}$")) {
+            paramRequest = new ParamRequest(Integer.parseInt(searchText));
+        } else if (searchText.matches("^[а-яА-я]+$")) {
+            paramRequest = new ParamRequest(searchText);
+        } else if (searchText.matches("\\b[а-яА-я]+\\b\\s\\b[а-яА-я]+\\b")) {
+
+            String[] stringBuf = searchText.split(" ");
+            paramRequest = new ParamRequest(stringBuf[0].trim(), stringBuf[1].trim());
+        }
+
+        return paramRequest;
     }
 
     private void initComponents() {
@@ -143,24 +158,24 @@ public class MainFrame extends javax.swing.JFrame {
 
         pack();
         this.setLocationRelativeTo(null);
+        this.setSize(1600, 800);
     }// </editor-fold>/
-
 
     private void actionEditContact(ActionEvent actionEvent) {
         // Получаем выделенную строку
         int sr = employeeTable.getSelectedRow();
         // если строка выделена - можно ее редактировать
         if (sr != -1) {
-            // Получаем ID контакта
+            // Получаем ID объекта
             int id = Integer.parseInt(employeeTable.getModel().getValueAt(sr, 0).toString());
-            // получаем данные контакта по его ID
+            // получаем данные объекта по его ID
             ParamRequest paramRequest = new ParamRequest(id);
             Employee employee = null;
             try {
 
                 employee = connectionManager.findEntity(paramRequest).get(0);
-                // Создаем диалог для ввода данных и передаем туда контакт
-                AddUpdateDialogFrame ecd = new AddUpdateDialogFrame(employee,connectionManager);
+                // Создаем диалог для ввода данных и передаем туда объект
+                AddUpdateDialogFrame ecd = new AddUpdateDialogFrame(employee, connectionManager);
                 // Обрабатываем закрытие диалога
                 saveContact(ecd);
 
@@ -176,7 +191,6 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-
     private void actionAddEmployee(ActionEvent evt) {
 
         // Создаем диалог для ввода данных
@@ -185,7 +199,7 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             saveContact(ecd);
         } catch (ContactBusinessException e) {
-            logger.error("Ошибка при добавлении контакта", e);
+            logger.error("Ошибка при добавлении", e);
         }
     }
 
@@ -194,13 +208,13 @@ public class MainFrame extends javax.swing.JFrame {
         // Получаем выделенную строку
         int sr = employeeTable.getSelectedRow();
         if (sr != -1) {
-            // Получаем ID контакта
+            // Получаем ID
             int id = Integer.parseInt(employeeTable.getModel().getValueAt(sr, 0).toString());
 
             try {
-                // Удаляем контакт и перегружаем если список был более 1.
+                // Удаляем объект и перегружаем если список был более 1.
                 connectionManager.deleteEntity(id);
-                // перегружаем список контактов
+                // перегружаем список
                 if (paramRequest != null) {
                     loadContact(paramRequest);
                 }
@@ -249,34 +263,19 @@ public class MainFrame extends javax.swing.JFrame {
     private void saveContact(AddUpdateDialogFrame ecd) throws ContactBusinessException { //todo
         // Если мы нажали кнопку SAVE
         if (ecd.isSave()) {
-            // Получаем контакт из диалогового окна
-            Employee employee = ecd.getContact();
+            // Получаем объект из диалогового окна
+            Employee employee = ecd.getEmployee();
             if (employee.getID() != 0) {
-                // Если ID у контакта есть, то мы его обновляем
+                // Если ID у объекта есть, то мы его обновляем
                 connectionManager.updateEntity(employee);
+                if (paramRequest != null) loadContact(paramRequest);
             } else {
-                // Если у контакта нет ID - значит он новый и мы его добавляем
+                // Если у объекта нет ID - значит он новый и мы его добавляем
                 connectionManager.addEntity(employee);
+                paramRequest = new ParamRequest(employee.getSurname(), employee.getFirstName());
             }
-            //todo  loadContact();
+
         }
-    }
-
-    protected static ParamRequest prepareParamRequest(String searchText) {
-
-        ParamRequest paramRequest = null;
-
-        if (searchText.matches("^\\d{1,6}$")) {
-            paramRequest = new ParamRequest(Integer.parseInt(searchText));
-        } else if (searchText.matches("^[а-яА-я]+$")) {
-            paramRequest = new ParamRequest(searchText);
-        } else if (searchText.matches("\\b[а-яА-я]+\\b\\s\\b[а-яА-я]+\\b")) {
-
-            String[] stringBuf = searchText.split(" ");
-            paramRequest = new ParamRequest(stringBuf[0].trim(), stringBuf[1].trim());
-        }
-
-        return paramRequest;
     }
 
 }

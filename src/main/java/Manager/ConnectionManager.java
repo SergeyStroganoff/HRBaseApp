@@ -22,7 +22,7 @@ public class ConnectionManager {
         dao = DAOFactory.getBaseDAO(BaseType.FIREBIRD);
     }
 
-    // Добавление контакта - возвращает ID добавленного контакта
+    // Добавление объекта - возвращает ID
     public int addEntity(Employee employee) throws ContactBusinessException {
         try {
             return dao.addEntity(employee);
@@ -40,7 +40,7 @@ public class ConnectionManager {
         }
     }
 
-    // Удаление контакта
+    // Удаление сущности
     public void deleteEntity(int Id) throws ContactBusinessException {
         try {
             dao.deleteEntity(Id);

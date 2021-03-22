@@ -14,11 +14,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/**
- * @author Server
- */
 public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionListener {
 
+    private static final String SAVE = "SAVE";
+    private static final String CANCEL = "CANCEL";
+    ConnectionManager connectionManager;
+    List<Department> departmentList = null;
+    List<Position> positionList = null;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -37,15 +39,10 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
-
-    // Если это новый контакт - cjntactId == null
+    // Если это новый Id == null
     private Integer contactId = null;
     // Надо ли записывать изменения после закрытия диалога
     private boolean save = false;
-
-    private static final String SAVE = "SAVE";
-    private static final String CANCEL = "CANCEL";
-    ConnectionManager connectionManager;
 
 
     public AddUpdateDialogFrame(ConnectionManager connectionManager) {
@@ -55,15 +52,13 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
     public AddUpdateDialogFrame(Employee employee, ConnectionManager connectionManager) {
 
         initComponents();
-        // Если нам передали контакт - заполняем поля формы
+        // Если  передали объект - заполняем поля формы
         initComboBoxes(connectionManager);
         initFields(employee);
         setModal(true);
         // Запрещаем изменение размеров
         setResizable(false);
         setLocationRelativeTo(null);
-
-
         setVisible(true);
 
     }
@@ -103,10 +98,6 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
         jLabel7.setText("Должность");
         jLabel8.setText("Департамент (отдел)");
 
-
-        // jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
-        //  jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
-
         jButton1.setText("Сохранить");
         jButton1.setActionCommand(SAVE);
         jButton1.addActionListener(this);
@@ -114,6 +105,9 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
         jButton2.setText("Отменить");
         jButton2.setActionCommand(CANCEL);
         jButton2.addActionListener(this);
+
+        jTextField1.setEditable(false);
+        jTextField1.setText("0");
 
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -196,11 +190,9 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
         pack();
     }// </editor-fold>
 
-
     protected void initComboBoxes(ConnectionManager connectionManager) {
 
-        List<Department> departmentList = null;
-        List<Position> positionList = null;
+
         try {
             departmentList = connectionManager.getDepartmentList(null);
             positionList = connectionManager.getPositionList(null);
@@ -208,9 +200,7 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
         } catch (ContactBusinessException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Ошибка при запросе списка департаментов и должностей" + e.getMessage());
-
         }
-
 
         for (Department nextDepartment : departmentList) {
             jComboBox2.addItem(nextDepartment.getDepartmentName());
@@ -220,12 +210,11 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
         }
     }
 
-    //  заполняем поля из контакта
+    //  заполняем поля от объекта
     private void initFields(Employee employee) {
         if (employee != null) {
             contactId = employee.getID();
             jTextField1.setText(contactId.toString());
-            jTextField1.setEditable(false);
             jTextField2.setText(employee.getSurname());
             jTextField3.setText(employee.getFirstName());
             jTextField4.setText(employee.getSecondName());
@@ -236,7 +225,6 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
             jComboBox1.setSelectedItem(employee.getPosition().getNamePosition());
             jComboBox2.setSelectedItem(employee.getDepartment().getDepartmentName());
 
-            //jComboBox1.addItem(employee.getPosition().getNamePosition());
         }
     }
 
@@ -247,7 +235,15 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
         // Если нажали кнопку SAVE (сохранить изменения) - запоминаем этой
         save = SAVE.equals(action);
         // Закрываем форму
-        setVisible(false);
+        if (save) {
+            if (chekFields()) {
+                setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(this, "Ошибка при вводе данных сотрудника");
+            }
+
+
+        } else setVisible(false);
     }
 
     // Надо ли сохранять изменения
@@ -255,13 +251,50 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
         return save;
     }
 
-    // Создаем контакт из заполненных полей,
-    public Employee getContact() {
-        Employee employee = null;
-        return employee;
+    // Создаем объект из заполненных полей,
+    public Employee getEmployee() {
+
+        String currentPositionName = (String) jComboBox1.getSelectedItem();
+        String currentDepartmentName = (String) jComboBox2.getSelectedItem();
+        Position position = null;
+        Department department = null;
+
+        for (Position p : positionList) {
+            if (p.getNamePosition().equals(currentPositionName)) {
+                position = p;
+            }
+        }
+        for (Department dep : departmentList) {
+            if (dep.getDepartmentName().equals(currentDepartmentName)) {
+                department = dep;
+            }
+        }
+
+        Boolean access = true;
+        if (jTextField6.getText().contains("не")) {
+            access = false;
+        }
+
+        return new Employee(
+                Integer.parseInt(jTextField1.getText()),
+                jTextField2.getText(),
+                jTextField3.getText(),
+                jTextField4.getText(),
+                getDateFromString(jTextField5.getText()),
+                position, department,
+                access);
     }
 
-    public static LocalDate GetDateFromString(String stringDate) {
+    private boolean chekFields() {
+
+        if (!jTextField1.getText().matches("^[А-яа-я]+$")) return false;
+        if (!jTextField2.getText().matches("^[А-яа-я]+$")) return false;
+        if (!jTextField3.getText().matches("^[А-яа-я]+$")) return false;
+
+        return true;
+    }
+
+    private LocalDate getDateFromString(String stringDate) {
 
         LocalDate date;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
