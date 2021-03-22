@@ -14,6 +14,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static Service.DataConverter.dataToString;
+import static Service.DataConverter.getDateFromString;
+
 public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionListener {
 
     private static final String SAVE = "SAVE";
@@ -44,7 +47,6 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
     // Надо ли записывать изменения после закрытия диалога
     private boolean save = false;
 
-
     public AddUpdateDialogFrame(ConnectionManager connectionManager) {
         this(null, connectionManager);
     }
@@ -60,9 +62,7 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
         setResizable(false);
         setLocationRelativeTo(null);
         setVisible(true);
-
     }
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
@@ -218,7 +218,7 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
             jTextField2.setText(employee.getSurname());
             jTextField3.setText(employee.getFirstName());
             jTextField4.setText(employee.getSecondName());
-            jTextField5.setText(employee.getBirthDate().toString());
+            jTextField5.setText(dataToString(employee.getBirthDate()));
 
             String access = employee.getAccessSecret() ? "Оформлен" : "Не оформлен";
             jTextField6.setText(access);
@@ -241,8 +241,6 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
             } else {
                 JOptionPane.showMessageDialog(this, "Ошибка при вводе данных сотрудника");
             }
-
-
         } else setVisible(false);
     }
 
@@ -287,21 +285,17 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
 
     private boolean chekFields() {
 
-        if (!jTextField1.getText().matches("^[А-яа-я]+$")) return false;
-        if (!jTextField2.getText().matches("^[А-яа-я]+$")) return false;
-        if (!jTextField3.getText().matches("^[А-яа-я]+$")) return false;
+       final String fioCheck = "^[А-яа-я]+$";
+
+        if (!jTextField2.getText().matches(fioCheck)) return false;
+        if (!jTextField3.getText().matches(fioCheck)) return false;
+        if (!jTextField4.getText().matches(fioCheck)) return false;
+        if (!jTextField5.getText().matches("^(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[1-2]).(19|20)\\d\\d$")) return false;
 
         return true;
     }
 
-    private LocalDate getDateFromString(String stringDate) {
 
-        LocalDate date;
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        date = LocalDate.parse(stringDate, dtf);
-        return date;
-        //  01/05/16
-    }
 
 
 }

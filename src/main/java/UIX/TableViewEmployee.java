@@ -1,5 +1,6 @@
 package UIX;
 
+import Service.DataConverter;
 import entities.Employee;
 
 import java.time.LocalDate;
@@ -49,7 +50,8 @@ public class TableViewEmployee {
     }
 
     public String getBirthDate() {
-        return birthDate.toString();
+
+        return DataConverter.dataToString(birthDate);
     }
 
     public String getDepartmentName() {

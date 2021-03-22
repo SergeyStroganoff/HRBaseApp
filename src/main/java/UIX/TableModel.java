@@ -1,5 +1,6 @@
 package UIX;
 
+import Service.DataConverter;
 import entities.Employee;
 
 import javax.swing.table.AbstractTableModel;
