@@ -188,6 +188,7 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
         );
 
         pack();
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }// </editor-fold>
 
     protected void initComboBoxes(ConnectionManager connectionManager) {
