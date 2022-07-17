@@ -81,18 +81,15 @@ public class FireBirdDBDAOTest {
         } catch (DaoException e) {
             e.printStackTrace();
         }
-
         assert employeesList != null;
         Assert.assertEquals("TestFamily", employeesList.get(0).getSurname());
     }
 
     @Test
     public void deleteEntity() {
-
         int returnedID = 0;
         List<Employee> employeesList = null;
         Employee employee = createRandomEmployee();
-
         try {
             returnedID = fireBirdDBDAO.addEntity(employee);
             fireBirdDBDAO.deleteEntity(returnedID);

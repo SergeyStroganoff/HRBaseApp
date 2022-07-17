@@ -3,13 +3,10 @@ package entities;
 import java.util.Objects;
 
 public class Department extends BaseEntity {
-
-
     private String departmentName;
     private int countPerson;
     private String email;
     private String phoneNumber;
-
 
     public Department(int ID, String departmentName, int countPerson, String email, String phoneNumber) {
         super(ID);

@@ -17,8 +17,6 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 
 public class MainFrame extends javax.swing.JFrame {
-
-
     private static final Logger logger = Logger.getLogger(MainFrame.class);
     private final ConnectionManager connectionManager = new ConnectionManager();
     private javax.swing.JButton findButton;
@@ -39,24 +37,19 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     protected static ParamRequest prepareParamRequest(String searchText) {
-
         ParamRequest paramRequest = null;
-
         if (searchText.matches("^\\d{1,6}$")) {
             paramRequest = new ParamRequest(Integer.parseInt(searchText));
         } else if (searchText.matches("^[а-яА-я]+$")) {
             paramRequest = new ParamRequest(searchText);
         } else if (searchText.matches("\\b[а-яА-я]+\\b\\s\\b[а-яА-я]+\\b")) {
-
             String[] stringBuf = searchText.split(" ");
             paramRequest = new ParamRequest(stringBuf[0].trim(), stringBuf[1].trim());
         }
-
         return paramRequest;
     }
 
     private void initComponents() {
-
         jPanel1 = new javax.swing.JPanel();
         ScrollPane = new javax.swing.JScrollPane();
         employeeTable = new javax.swing.JTable();
@@ -68,31 +61,22 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         employeeTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         employeeTable.setShowGrid(true);
         Font f2 = new Font(Font.SANS_SERIF, Font.PLAIN, 14);
         employeeTable.setFont(f2);
-
         ScrollPane.setViewportView(employeeTable);
-
         findButton.setText("Поиск сотрудника");
         findButton.setActionCommand("Find");
         findButton.addActionListener(evt -> actionFind(evt));
-
         addButton.setText("Добавить сотрудника");
         addButton.addActionListener(actionEvent -> actionAddEmployee(actionEvent));
-
         deleteButton.setText("Удалить сотрудника");
         deleteButton.addActionListener(actionEvent -> actionDelete(actionEvent));
-
         editButton.setText("Редактировать запись");
         editButton.addActionListener(actionEvent -> actionEditContact(actionEvent));
-
         jTextField1.setText("Введите данные");
-
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -172,7 +156,6 @@ public class MainFrame extends javax.swing.JFrame {
             ParamRequest paramRequest = new ParamRequest(id);
             Employee employee = null;
             try {
-
                 employee = connectionManager.findEntity(paramRequest).get(0);
                 // Создаем диалог для ввода данных и передаем туда объект
                 AddUpdateDialogFrame ecd = new AddUpdateDialogFrame(employee, connectionManager);
@@ -183,7 +166,6 @@ public class MainFrame extends javax.swing.JFrame {
                 logger.error("Ошибка при редактировании", e);
                 JOptionPane.showMessageDialog(this, "Ошибка при редактировании" + e.getMessage());
             }
-
 
         } else {
             // Если строка не выделена - сообщаем об этом
@@ -246,7 +228,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     // Загрузить список
     private void loadContact(ParamRequest paramRequest) throws ContactBusinessException {
-
         //ParamRequest paramRequest = new ParamRequest(employeeString);
         List<Employee> employeeList = connectionManager.findEntity(paramRequest);
         // Создаем модель, которой передаем полученный список
@@ -274,7 +255,6 @@ public class MainFrame extends javax.swing.JFrame {
                 connectionManager.addEntity(employee);
                 paramRequest = new ParamRequest(employee.getSurname(), employee.getFirstName());
             }
-
         }
     }
 

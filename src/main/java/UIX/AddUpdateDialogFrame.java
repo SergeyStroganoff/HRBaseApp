@@ -10,8 +10,6 @@ import exception.ContactBusinessException;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static Service.DataConverter.dataToString;
@@ -220,12 +218,10 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
             jTextField3.setText(employee.getFirstName());
             jTextField4.setText(employee.getSecondName());
             jTextField5.setText(dataToString(employee.getBirthDate()));
-
             String access = employee.getAccessSecret() ? "Оформлен" : "Не оформлен";
             jTextField6.setText(access);
             jComboBox1.setSelectedItem(employee.getPosition().getNamePosition());
             jComboBox2.setSelectedItem(employee.getDepartment().getDepartmentName());
-
         }
     }
 
@@ -252,7 +248,6 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
 
     // Создаем объект из заполненных полей,
     public Employee getEmployee() {
-
         String currentPositionName = (String) jComboBox1.getSelectedItem();
         String currentDepartmentName = (String) jComboBox2.getSelectedItem();
         Position position = null;
@@ -273,7 +268,6 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
         if (jTextField6.getText().contains("не")) {
             access = false;
         }
-
         return new Employee(
                 Integer.parseInt(jTextField1.getText()),
                 jTextField2.getText(),
@@ -285,18 +279,13 @@ public class AddUpdateDialogFrame extends javax.swing.JDialog implements ActionL
     }
 
     private boolean chekFields() {
-
-       final String fioCheck = "^[А-яа-я]+$";
-
+        final String fioCheck = "^[А-яа-я]+$";
         if (!jTextField2.getText().matches(fioCheck)) return false;
         if (!jTextField3.getText().matches(fioCheck)) return false;
         if (!jTextField4.getText().matches(fioCheck)) return false;
         if (!jTextField5.getText().matches("^(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[1-2]).(19|20)\\d\\d$")) return false;
-
         return true;
     }
-
-
 
 
 }

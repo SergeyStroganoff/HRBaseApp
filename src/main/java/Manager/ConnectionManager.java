@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ConnectionManager {
 
-    private ActionDAO dao;
+    private final ActionDAO dao;
 
     public ConnectionManager() {
         dao = DAOFactory.getBaseDAO(BaseType.FIREBIRD);
