@@ -66,8 +66,6 @@ public class FireBirdDBDAO implements ActionDAO {
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(INSERT, new String[]{"ID"})) {
-
-
             stmt.setString(1, employee.getSurname());
             stmt.setString(2, employee.getFirstName());
             stmt.setString(3, employee.getSecondName());
@@ -75,9 +73,7 @@ public class FireBirdDBDAO implements ActionDAO {
             stmt.setInt(5, employee.getPosition().getID());
             stmt.setInt(6, employee.getDepartment().getID());
             stmt.setBoolean(7, employee.getAccessSecret());
-
             result = stmt.executeUpdate();
-
             ResultSet gk = stmt.getGeneratedKeys();
             if (gk.next()) {
                 result = gk.getInt("ID");
@@ -87,18 +83,14 @@ public class FireBirdDBDAO implements ActionDAO {
         } catch (SQLException e) {
             logger.error("Ошибка добавления записи в базу данных");
             throw new DaoException("Ошибка добавления записи в базу данных", e);
-
         }
         return result;
     }
 
     @Override
     public void updateEntity(Employee employee) throws DaoException {
-
         final String UPDATE = "UPDATE employee SET surname=?, fname=?, sname=?, birthdate=?, position_id=?, departament_id=?, access_secrets=? WHERE id=?";
-
         try (PreparedStatement stmt = connection.prepareStatement(UPDATE)) {
-
             stmt.setString(1, employee.getSurname());
             stmt.setString(2, employee.getFirstName());
             stmt.setString(3, employee.getSecondName());
@@ -107,12 +99,10 @@ public class FireBirdDBDAO implements ActionDAO {
             stmt.setInt(6, employee.getDepartment().getID());
             stmt.setBoolean(7, employee.getAccessSecret());
             stmt.setInt(8, employee.getID());
-
             int result = stmt.executeUpdate();
             System.out.println(result);
 
         } catch (Exception e) {
-
             logger.error("Ошибка добавления записи в базу данных");
             throw new DaoException(e);
         }
@@ -140,27 +130,21 @@ public class FireBirdDBDAO implements ActionDAO {
 
     @Override
     public List<Employee> findEntity(ParamRequest paramRequest) throws DaoException {
-
         List<Employee> employeeList = null;
         ResultSet resultSet = null;
-
         try {
             resultSet = doRequest(paramRequest);
             employeeList = new ArrayList<>();
-
             while (resultSet.next()) {
-
                 Position position = new Position(
                         resultSet.getInt(16),
                         resultSet.getString(17),
                         resultSet.getFloat(18));
-
                 Department department = new Department(resultSet.getInt(9),
                         resultSet.getString(15),
                         resultSet.getInt(10),
                         resultSet.getString(11),
                         resultSet.getString(12));
-
                 Employee employee = new Employee(
                         resultSet.getInt(1),
                         resultSet.getString(2),
@@ -169,7 +153,6 @@ public class FireBirdDBDAO implements ActionDAO {
                         resultSet.getDate(5).toLocalDate(),
                         position, department,
                         resultSet.getBoolean(8));
-
                 employeeList.add(employee);
             }
 
@@ -177,7 +160,6 @@ public class FireBirdDBDAO implements ActionDAO {
             logger.error("Ошибка SQL запроса" + throwables.toString());
             throw new DaoException(throwables.toString());
         }
-
         return employeeList;
     }
 
@@ -196,7 +178,8 @@ public class FireBirdDBDAO implements ActionDAO {
 
         try (PreparedStatement stmt = connection.prepareStatement(GET)) {
             if (ID != null) {
-                stmt.setInt(1, ID);}
+                stmt.setInt(1, ID);
+            }
             resultSet = stmt.executeQuery();
             while (resultSet.next()) {
                 Department department = new Department(
@@ -246,11 +229,8 @@ public class FireBirdDBDAO implements ActionDAO {
         return departmentList;
     }
 
-
     private ResultSet doRequest(ParamRequest parameters) throws SQLException {
-
         String whereSQL = ";";
-
         if (parameters.getID() != null) {
             whereSQL = String.format("WHERE e.id = %d order by e.id;", parameters.getID());
         }

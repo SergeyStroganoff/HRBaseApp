@@ -5,10 +5,10 @@ import java.util.Objects;
 
 public class Employee extends BaseEntity {
 
-   private String Surname;
-   private String FirstName;
-   private String SecondName;
-   private LocalDate BirthDate;
+   private String surname;
+   private String firstName;
+   private String secondName;
+   private LocalDate birthDate;
    private Position position;
    private Department department;
    private Boolean accessSecret;
@@ -16,45 +16,45 @@ public class Employee extends BaseEntity {
     public Employee(int ID, String surname, String firstName, String secondName, LocalDate birthDate,
                     Position position, Department department, Boolean accessSecret) {
         super(ID);
-        Surname = surname;
-        FirstName = firstName;
-        SecondName = secondName;
-        BirthDate = birthDate;
+        this.surname = surname;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.birthDate = birthDate;
         this.position = position;
         this.department = department;
         this.accessSecret = accessSecret;
     }
 
     public String getSurname() {
-        return Surname;
+        return surname;
     }
 
     public void setSurname(String surname) {
-        Surname = surname;
+        this.surname = surname;
     }
 
     public String getFirstName() {
-        return FirstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-        FirstName = firstName;
+        this.firstName = firstName;
     }
 
     public String getSecondName() {
-        return SecondName;
+        return secondName;
     }
 
     public void setSecondName(String secondName) {
-        SecondName = secondName;
+        this.secondName = secondName;
     }
 
     public LocalDate getBirthDate() {
-        return BirthDate;
+        return birthDate;
     }
 
     public void setBirthDate(LocalDate birthDate) {
-        BirthDate = birthDate;
+        this.birthDate = birthDate;
     }
 
     public Position getPosition() {
@@ -99,10 +99,10 @@ public class Employee extends BaseEntity {
     public String toString() {
         return "Employee{" +
                 "ID=" + ID +
-                ", Surname='" + Surname + '\'' +
-                ", FirstName='" + FirstName + '\'' +
-                ", SecondName='" + SecondName + '\'' +
-                ", BirthDate=" + BirthDate +
+                ", Surname='" + surname + '\'' +
+                ", FirstName='" + firstName + '\'' +
+                ", SecondName='" + secondName + '\'' +
+                ", BirthDate=" + birthDate +
                 ", position=" + position +
                 ", department=" + department +
                 ", accessSecret=" + accessSecret +

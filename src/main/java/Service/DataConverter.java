@@ -15,12 +15,9 @@ public class DataConverter {
         //  01/05/16
     }
 
-
     public static String dataToString(LocalDate date) {
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern(PATTERN);
         return dtf.format(date);
-
     }
-
 }

@@ -1,15 +1,12 @@
 package UIX;
 
-import Service.DataConverter;
 import entities.Employee;
 
 import javax.swing.table.AbstractTableModel;
-import java.time.LocalDate;
 import java.util.List;
 
 public class TableModel extends AbstractTableModel {
     private static final String MODEL = "model";
-
     // колонки таблицы
     private static final String[] HEADERS = {
             "ID", "Фамилия", "Имя", "Отчество", "Дата рождения",
@@ -45,7 +42,7 @@ public class TableModel extends AbstractTableModel {
 
     public Object getValueAt(int row, int col) {
         Employee employee = employeeList.get(row);
-        TableViewEmployee tableViewE =new TableViewEmployee(employee);
+        TableViewEmployee tableViewE = new TableViewEmployee(employee);
 
         // В зависимости от номера колонки возвращаем то или иное поле
         switch (col) {
